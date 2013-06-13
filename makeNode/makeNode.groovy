@@ -17,7 +17,7 @@ WebResource resource = Client.create().resource( nodeEntryPointUri );
 // POST {} to the node entry point URI
 ClientResponse response = resource.accept( MediaType.APPLICATION_JSON )
         .type( MediaType.APPLICATION_JSON )
-        .entity( "{}" )
+        .entity( "{ }" )
         .post( ClientResponse.class );
  
 final URI location = response.getLocation();
