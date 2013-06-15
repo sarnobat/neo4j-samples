@@ -1,6 +1,6 @@
 
 import static org.neo4j.kernel.impl.util.FileUtils.deleteRecursively;
-
+import org.neo4j.cypher.javacompat.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -14,15 +14,14 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.helpers.collection.IteratorUtil;
 
-private static final String DB_PATH = "target/java-query-db";
+
 String resultString;
 String columnsString;
 String nodeResult;
 String rows = "";
 
 
-void run() {
-	clearDbPath();
+final String DB_PATH = "target/java-query-db";
 
 	// START SNIPPET: addData
 	GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
@@ -41,48 +40,20 @@ void run() {
 
 	// START SNIPPET: execute
 	ExecutionEngine engine = new ExecutionEngine( db );
-	ExecutionResult result = engine.execute( "start n=node(*) where n.name! = 'my node' return n, n.name" );
+	ExecutionResult result = engine.execute( " START n=node(*) RETURN n" );
 	// END SNIPPET: execute
 	// START SNIPPET: columns
 	List<String> columns = result.columns();
-	// END SNIPPET: columns
-	// START SNIPPET: items
 	Iterator<Node> n_column = result.columnAs( "n" );
 	for ( Node node : IteratorUtil.asIterable( n_column ) )
 	{
 		// note: we're grabbing the name property from the node,
 		// not from the n.name in this case.
-		nodeResult = node + ": " + node.getProperty( "name" );
+		println(node.getPropertyValues());
+
 	}
 	// END SNIPPET: items
-	// the result is now empty, get a new one
-	result = engine.execute( "start n=node(*) where n.name! = 'my node' return n, n.name" );
-	// START SNIPPET: rows
-	for ( Map<String, Object> row : result )
-	{
-		for ( Entry<String, Object> column : row.entrySet() )
-		{
-			rows += column.getKey() + ": " + column.getValue() + "; ";
-		}
-		rows += "\n";
-	}
-	// END SNIPPET: rows
+
 	resultString = engine.execute( "start n=node(*) where n.name! = 'my node' return n, n.name" ).dumpToString();
 	columnsString = columns.toString();
 	db.shutdown();
-}
-
-private void clearDbPath()
-{
-	try
-	{
-		deleteRecursively( new File( DB_PATH ) );
-	}
-	catch ( IOException e )
-	{
-		throw new RuntimeException( e );
-	}
-}
-
-JavaQuery javaQuery = new JavaQuery();
-javaQuery.run();
