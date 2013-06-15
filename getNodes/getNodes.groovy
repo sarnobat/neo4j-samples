@@ -20,12 +20,10 @@ ClientResponse response = resource
 .get( ClientResponse.class );
 
 String str = IOUtils.toString(response.getEntityInputStream(), "UTF-8");
-//JSONObject jsonObj = new JSONObject(str);
 JSONArray a = new JSONArray(str);
 for (int i = 0; i < a.length(); i++) {
 	JSONObject o = a.getJSONObject(i);
 	println(o.get("data").get("name"));
 }
 
-//System.out.println( a );
 response.close();
