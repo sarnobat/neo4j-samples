@@ -2,6 +2,7 @@ import org.apache.commons.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.json.*;
 import javax.ws.rs.core.MediaType;
 
 import com.sun.jersey.api.client.Client;
@@ -19,7 +20,12 @@ ClientResponse response = resource
 .get( ClientResponse.class );
 
 String str = IOUtils.toString(response.getEntityInputStream(), "UTF-8");
+//JSONObject jsonObj = new JSONObject(str);
+JSONArray a = new JSONArray(str);
+for (int i = 0; i < a.length(); i++) {
+	JSONObject o = a.getJSONObject(i);
+	println(o.get("data").get("name"));
+}
 
-
-System.out.println( String.format( str ));
+//System.out.println( a );
 response.close();
