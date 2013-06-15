@@ -9,12 +9,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 final String SERVER_ROOT_URI = "http://localhost:7474/db/data/";
-final String nodeEntryPointUri = SERVER_ROOT_URI + "/index/auto/node/?query=name:*";
+final String nodeEntryPointUri = SERVER_ROOT_URI + "index/auto/node/?query=name:*";
 // http://localhost:7474/db/data/db/data/index/auto/node/?query=name:*
 
 WebResource resource = Client.create()
-		.resource( SERVER_ROOT_URI );
-ClientResponse response = resource.accept(MediaType.APPLICATION_JSON).get( ClientResponse.class );
+		.resource( nodeEntryPointUri );
+ClientResponse response = resource
+.accept(MediaType.APPLICATION_JSON)
+.get( ClientResponse.class );
 
 String str = IOUtils.toString(response.getEntityInputStream(), "UTF-8");
 
